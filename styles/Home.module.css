@@ -118,6 +118,27 @@
   padding: 2rem 0;
 }
 
+.rangeItem {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  justify-items: center;
+}
+
+.rangeMinItem {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.rangeMaxItem {
+  grid-column-start: 4;
+  grid-column-end: 6;
+}
+
+.gapFormItem {
+  width: 100%;
+  height: 100%;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
