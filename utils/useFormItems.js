@@ -9,14 +9,14 @@ export const FIELD_TYPES = {
   text: "text",
   number: "number",
   select: "select",
-  range: 'range'
+  range: "range",
 };
 
 const getSelectOptions = (options) => {
   return options.length
-    ? options.map((option, key) => {
+    ? options.map((option, index) => {
         return (
-          <Option key={key} value={option.value}>
+          <Option key={option.value} value={option.value}>
             {option.label}
           </Option>
         );
@@ -24,12 +24,32 @@ const getSelectOptions = (options) => {
     : null;
 };
 
-const useFormItems = ({ config = [] }) => {
+const getErrorMessage = ({ itemConfig, errors, touched }) => {
+  if (itemConfig.type === FIELD_TYPES.range) {
+    return <>
+      {touched[itemConfig.min.name] && errors[itemConfig.min.name]}
+      {touched[itemConfig.max.name] && errors[itemConfig.max.name]}
+    </>;
+  }
+  return <div>{touched[itemConfig.name] && errors[itemConfig.name]}</div>;
+};
+
+const useFormItems = ({ config = [], errors = {}, touched = {} }) => {
   const formItems = config.map((itemConfig, index) => {
+    const errorMessage = getErrorMessage({
+      itemConfig,
+      errors,
+      touched,
+    });
+
     switch (itemConfig.type) {
       case FIELD_TYPES.text:
         return (
-          <FormItemLabel key={itemConfig.name} {...itemConfig}>
+          <FormItemLabel
+            key={itemConfig.name}
+            {...itemConfig}
+            errorMessage={errorMessage}
+          >
             <Input
               name={itemConfig.name}
               value={itemConfig.value}
@@ -40,7 +60,11 @@ const useFormItems = ({ config = [] }) => {
 
       case FIELD_TYPES.number:
         return (
-          <FormItemLabel key={itemConfig.name} {...itemConfig}>
+          <FormItemLabel
+            key={itemConfig.name}
+            {...itemConfig}
+            errorMessage={errorMessage}
+          >
             <Input
               type="number"
               name={itemConfig.name}
@@ -52,7 +76,11 @@ const useFormItems = ({ config = [] }) => {
 
       case FIELD_TYPES.select:
         return (
-          <FormItemLabel key={itemConfig.name} {...itemConfig}>
+          <FormItemLabel
+            key={itemConfig.name}
+            {...itemConfig}
+            errorMessage={errorMessage}
+          >
             <Select
               disabled={itemConfig.disabled}
               name={itemConfig.name}
@@ -69,7 +97,11 @@ const useFormItems = ({ config = [] }) => {
 
       case FIELD_TYPES.range:
         return (
-          <FormItemLabel key={itemConfig.name} {...itemConfig}>
+          <FormItemLabel
+            key={`${itemConfig.name}${index}`}
+            {...itemConfig}
+            errorMessage={errorMessage}
+          >
             <div className={styles.rangeItem}>
               <Input
                 name={itemConfig.min.name}
@@ -83,7 +115,7 @@ const useFormItems = ({ config = [] }) => {
                 <span className={styles.rangeSeparatorItem}>—</span>
               </div>
               <Input
-                key={itemConfig.max.name}
+                key={`${itemConfig.name}${index + 1}`}
                 name={itemConfig.max.name}
                 min={itemConfig.max.minValue}
                 value={itemConfig.max.value}

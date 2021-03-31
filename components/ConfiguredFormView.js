@@ -1,7 +1,14 @@
 import useFormItems, { FIELD_TYPES } from "@/utils/useFormItems";
 
 const ConfiguredForm = (props) => {
-  const { values, handleChange, setFieldValue } = props;
+  const {
+    values,
+    handleChange,
+    setFieldValue,
+    errors,
+    touched,
+    status,
+  } = props;
 
   const config = [
     {
@@ -27,6 +34,7 @@ const ConfiguredForm = (props) => {
       label: "Select",
       placeholder: "",
       value: values.select,
+      allowClear: true,
       options: [
         { value: "value1", label: "value1" },
         { value: "value2", label: "value2" },
@@ -42,19 +50,19 @@ const ConfiguredForm = (props) => {
       label: "Range",
       required: true,
       min: {
-        name: "RangeMin",
-        value: values.RangeMin,
+        name: "rangeMin",
+        value: values.rangeMin,
         onChange: handleChange,
       },
       max: {
-        name: "RangeMax",
-        value: values.RangeMax,
+        name: "rangeMax",
+        value: values.rangeMax,
         onChange: handleChange,
       },
     },
   ];
 
-  const { formItems } = useFormItems({ config });
+  const { formItems } = useFormItems({ config, errors, touched, status });
 
   return <>{formItems}</>;
 };
