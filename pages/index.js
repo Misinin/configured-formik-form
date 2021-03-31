@@ -11,11 +11,14 @@ export default function Home() {
     console.log(values);
   };
 
-  const { values, handleSubmit, handleChange } = useFormik({
+  const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     enableReinitialize: true,
     initialValues: {
       input: "text input",
       number: 42,
+      select: "value1",
+      RangeMin: 0,
+      RangeMax: 10,
     },
     onSubmit: submitForm,
   });
@@ -35,6 +38,7 @@ export default function Home() {
               values={values}
               handleChange={handleChange}
               handleSubmit={handleSubmit}
+              setFieldValue={setFieldValue}
             />
             <Button type="primary" onClick={handleSubmit}>
               Submit
